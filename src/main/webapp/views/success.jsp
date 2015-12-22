@@ -9,12 +9,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>Success</title>
+    <title>Login Success</title>
 </head>
 <body>
     Success
-    EL phoneNumber:${dataBinderTest.phoneNumber}<br/>
+    ${message}
+    <%--EL phoneNumber:${dataBinderTest.phoneNumber}<br/>
     EL state:${dataBinderTest.state}<br/>
-    EL date:${dataBinderTest.date}<br/>
+    EL date:${dataBinderTest.date}<br/>--%>
 </body>
 </html>

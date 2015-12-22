@@ -27,6 +27,7 @@ public class IndexController implements Controller {
         ModelAndView mv = new ModelAndView();
         //添加模型数据可以是任意的POJO对象
         mv.addObject("message", "Snell");
+        LOGGER.error("SSSS:" + mv.toString());
         //设置逻辑视图名，视图解析器会根据该名字解析到具体的视图页面
         mv.setViewName("home");
         return mv;

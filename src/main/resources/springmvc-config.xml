@@ -7,8 +7,7 @@
        http://www.springframework.org/schema/mvc
        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <!--<mvc:annotation-driven/>-->
-
+    <!-- before 2.5  start-->
     <!-- before 2.5: HandlerMapping-->
     <bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
 
@@ -24,15 +23,22 @@
 
     <!-- before 2.5: beanName mapping-->
     <bean name="/index" class="com.springmvc.controller.IndexController"/>
-    <bean name="/old/hello" class="com.springmvc.controller.old.HelloController">
-        <!--强制请求方法类型-->
-        <!--<property name="supportedMethods" value="POST"/>-->
-        <!--当前请求的session前置条件检查，如果当前请求无session 将抛出HttpSessionRequiredException异常-->
-        <!--<property name="requireSession" value="true"/>-->
-        <!-- 浏览器缓存5秒-->
+    <bean name="/user/login" class="com.springmvc.controller.user.LoginController"/>
+    <!--<bean name="/old/hello" class="com.springmvc.controller.old.HelloController">
+        &lt;!&ndash;强制请求方法类型&ndash;&gt;
+        &lt;!&ndash;<property name="supportedMethods" value="POST"/>&ndash;&gt;
+        &lt;!&ndash;当前请求的session前置条件检查，如果当前请求无session 将抛出HttpSessionRequiredException异常&ndash;&gt;
+        &lt;!&ndash;<property name="requireSession" value="true"/>&ndash;&gt;
+        &lt;!&ndash; 浏览器缓存5秒&ndash;&gt;
         <property name="cacheSeconds" value="5"/>
     </bean>
     <bean name="/old/lastModified" class="com.springmvc.controller.old.HelloWorldLastModifiedCacheController"/>
 
-    <bean name="/old/dataBind" class="com.springmvc.controller.old.DataBinderTestController"/>
+    <bean name="/old/dataBind" class="com.springmvc.controller.old.DataBinderTestController"/>-->
+
+    <!-- before 2.5  end-->
+
+
+    <!--<mvc:annotation-driven/>-->
+
 </beans>
