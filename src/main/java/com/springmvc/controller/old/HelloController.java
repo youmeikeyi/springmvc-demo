@@ -23,6 +23,7 @@ public class HelloController extends AbstractController {
         //如果想直接在该处理器/控制器写响应可以通过返回null告诉DispatcherServlet自己已经写出响应了，
 //        不需要它进行视图解析
 
+        //直接通过response写响应!
         //点击后再次请求当前页面
         response.getWriter().write("<a href=''>this</a>");
         return null;

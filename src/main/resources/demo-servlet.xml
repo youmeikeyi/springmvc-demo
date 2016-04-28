@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="com.springmvc.controller"/>
+    <!-- ///////////////////////////////before 2.5  start-->
+    <!-- before 2.5: HandlerMapping-->
+    <!--<bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>-->
+    <!-- before 2.5: HandlerAdapter-->
+    <!--<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>-->
+    <!-- Spring3.1之前的注解 HandlerMapping -->
+    <!--<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>-->
+    <!-- Spring3.1之前的注解 HandlerAdapter -->
+    <!--<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>-->
+
+    <!--Spring3.1开始的注解 HandlerMapping -->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <!-- 因为我们的注解式控制器是POJO，没有实现任何东西，因此无法注入WebBindingInitializer，
+        此时我们需要把WebBindingInitializer注入到我们的RequestMappingHandlerAdapter或AnnotationMethodHandlerAdapter，
+        这样对于所有的注解式控制器都是共享的。-->
+        <property name="webBindingInitializer">
+            <bean class="com.springmvc.controller.support.initializer.MyWebBindingInitializer"/>
+        </property>
+    </bean>
+
+    <!-- View Resolver-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <bean id = "conversionService"
+          class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <set><!--注册的自定义类型转换器-->
+                <bean class="com.springmvc.controller.support.converter.StringToPhoneNumberConverter"></bean>
+            </set>
+        </property>
+        <property name="formatters">
+            <set>
+                <bean class="com.springmvc.controller.support.formatter.PhoneNumberFormatAnnotationFormatterFactory"/>
+            </set>
+        </property>
+
+    </bean>
+
+    <!-- before 2.5: beanName mapping-->
+    <bean name="/old/index" class="com.springmvc.controller.old.IndexController"/>
+<!--
+    <bean name="/user/login" class="com.springmvc.controller.user.LoginController"/>
+-->
+    <!--<bean name="/old/hello" class="com.springmvc.controller.old.HelloController">
+        &lt;!&ndash;强制请求方法类型&ndash;&gt;
+        &lt;!&ndash;<property name="supportedMethods" value="POST"/>&ndash;&gt;
+        &lt;!&ndash;当前请求的session前置条件检查，如果当前请求无session 将抛出HttpSessionRequiredException异常&ndash;&gt;
+        &lt;!&ndash;<property name="requireSession" value="true"/>&ndash;&gt;
+        &lt;!&ndash; 浏览器缓存5秒&ndash;&gt;
+        <property name="cacheSeconds" value="5"/>
+    </bean>
+    <bean name="/old/lastModified" class="com.springmvc.controller.old.HelloWorldLastModifiedCacheController"/>
+
+    <bean name="/old/dataBind" class="com.springmvc.controller.old.DataBinderTestController"/>-->
+
+    <!-- 注册WebBindingInitializer实现 -->
+    <bean id="myWebBindingInitializer" class="com.springmvc.controller.support.initializer.MyWebBindingInitializer"/>
+    <bean name="/old/dataBind" class="com.springmvc.controller.old.DataBinderTestController">
+        <!-- 注入WebBindingInitializer实现 -->
+        <property name="webBindingInitializer" ref="myWebBindingInitializer"/>
+    </bean>
+
+    <bean class="com.springmvc.controller.RegisterSimpleFormController"/>
+
+    <!--messageSource：用于获取错误码对应的错误消息的，而且bean名字默认必须是messageSource。-->
+    <bean id="messageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="classpath:messages"/>
+        <property name="fileEncodings" value="utf-8"/>
+        <property name="cacheSeconds" value="120"/>
+    </bean>
+    <bean name="old/error" class="com.springmvc.controller.old.ErrorController"/>
+
+    <bean name="old/dataBindError" class="com.springmvc.controller.old.DataBinderErrorTestController">
+        <property name="formView" value="input"/>
+        <property name="successView" value="success"/>
+    </bean>
+    <bean id="userModelValidator"
+          class="com.springmvc.controller.support.validator.UserModelValidator"/>
+    <!--<bean name="/validator"
+          class="cn.javass.chapter4.web.controller.RegisterSimpleFormController">
+        <property name="formView" value="registerAndValidator"/>
+        <property name="successView" value="redirect:/success"/>
+        <property name="validator" ref="userModelValidator"/>
+    </bean>-->
+
+    <bean id="carManager" class="com.springmvc.demo.service.CarManager">
+        <!-- * nitialize carList (CarManager) and brandList (BrandManager) in Spring configuration file: * -->
+        <property name="carList">
+            <list>
+                <ref bean="car1"/>
+                <ref bean="car2"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="brandManager" class="com.springmvc.demo.service.BrandManager">
+        <property name="brandList">
+            <list>
+                <ref bean="brand1"/>
+                <ref bean="brand2"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="brand1" class="com.springmvc.demo.model.Brand">
+        <property name="id" value="1"/>
+        <property name="name" value="Mercedes"/>
+        <property name="country" value="Germany"/>
+    </bean>
+
+    <bean id="brand2" class="com.springmvc.demo.model.Brand">
+        <property name="id" value="2"/>
+        <property name="name" value="Peugeot"/>
+        <property name="country" value="France"/>
+    </bean>
+
+    <bean id="car1" class="com.springmvc.demo.model.Car">
+        <property name="id" value="1"/>
+        <property name="brand" ref="brand1"/>
+        <property name="model" value="SL 500"/>
+        <property name="price" value="40000"/>
+    </bean>
+
+    <bean id="car2" class="com.springmvc.demo.model.Car">
+        <property name="id" value="2"/>
+        <property name="brand" ref="brand2"/>
+        <property name="model" value="607"/>
+        <property name="price" value="35000"/>
+    </bean>
+
+    <bean name="/list_cars" class="com.springmvc.controller.old.CarListController">
+        <property name="carManager" ref="carManager"/>
+    </bean>
+
+    <bean name="/new_car" class="com.springmvc.controller.old.CarNewController">
+        <property name="commandClass" value="com.springmvc.demo.model.Car"/>
+        <property name="formView" value="carNew"/>
+        <property name="successView" value="list_cars"/>
+        <property name="validator">
+            <bean class="com.springmvc.controller.support.validator.CarValidator"/>
+        </property>
+    </bean>
+
+    <bean id="userService" class="com.springmvc.demo.service.UserService"/>
+    <!--<bean name="/user/**" class="com.springmvc.controller.user.UserController">
+        &lt;!&ndash;<property name="userService" ref="userService"/>&ndash;&gt;
+        <property name="createView" value="user/create"/>
+        <property name="updateView" value="user/update"/>
+        <property name="deleteView" value="user/delete"/>
+        <property name="listView" value="user/list"/>
+        <property name="redirectToListView" value="redirect:/user/list"/>
+        &lt;!&ndash; 使用PropertiesMethodNameResolver来解析功能处理方法名 &ndash;&gt;
+        &lt;!&ndash;property name="methodNameResolver" ref="propertiesMethodNameResolver"/&ndash;&gt;
+    </bean>-->
+    <!-- ///////////////////////////////before 2.5  end-->
+    <!--<bean class="com.springmvc.controller.HelloController"/>-->
+
+    <!--<mvc:annotation-driven/>-->
+
+</beans>

@@ -1,19 +1,12 @@
 package com.springmvc.controller.old;
 
-import com.springmvc.controller.support.editor.PhoneNumberEditor;
 import com.springmvc.demo.model.DataBinderTestModel;
-import com.springmvc.demo.model.PhoneNumberModel;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractCommandController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * 数据绑定
@@ -32,10 +25,11 @@ public class DataBinderTestController extends AbstractCommandController {
             command, BindException errors) throws Exception {
 //输出command对象看看是否绑定正确
         System.out.println(command);
-        return new ModelAndView("success").addObject("dataBinderTest",
-                command);
+        return new ModelAndView("success").addObject("dataBinderTest",  command);
     }
 
+   /*
+    for test webdatabinder
     @Override
     protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder)
             throws Exception {
@@ -48,7 +42,7 @@ public class DataBinderTestController extends AbstractCommandController {
         binder.registerCustomEditor(Date.class, dateEditor);
         //自定义的电话号码编辑器
         binder.registerCustomEditor(PhoneNumberModel.class, new PhoneNumberEditor());
-    }
+    }*/
 
 
 }
